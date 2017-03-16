@@ -1,0 +1,88 @@
+<template>
+  <div>
+    <h1>{{ msg }}</h1>
+    <button class="button" v-on:click="helloCall()">Call API</button>
+    <div v-if="ready" class="data">
+      <p>API says:</p>
+      <transition-group name="fade">
+        <div v-for="(entry, key) in api.data" v-bind:key="key">
+          <pre>
+            <code>{{ key }} : {{ entry }}</code>
+          </pre>
+        </div>
+      </transition-group>
+    </div>
+    <div v-else-if="loading" class="loading">
+      <span class="preloader"></span>
+    </div>
+  </div>
+</template>
+
+<script>
+import axios from 'axios'
+
+export default {
+  data: function() {
+    return {
+      // note: changing this line won't causes changes
+      // with hot-reload because the reloaded component
+      // preserves its current state and we are modifying
+      // its initial state.
+      msg: 'Welcome!',
+      api: '',
+      error: {},
+      loading: false,
+      ready: false
+    }
+  },
+  methods: {
+    helloCall: function() {
+      this.loading = true
+      axios.get('/api/call').then(
+        response => {
+          console.log(response)
+          this.api = response
+          this.loading = false
+          this.ready = true
+        },
+        error => {
+          console.log(error)
+          this.error = error
+        })
+    }
+  }
+}
+</script>
+
+<style lang="sass">
+body {
+  font-family: Open Sans, sans-serif;
+}
+.loading {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.preloader {
+  display: inline-block;
+  margin: 5em;
+  border-width: 30px;
+  border-radius: 50%;
+  border-style: solid;
+  border-color: #444 transparent;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  100% {  transform: rotate(359deg); }
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+  opacity: 0
+}
+</style>
