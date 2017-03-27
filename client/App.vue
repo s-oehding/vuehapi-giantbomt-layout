@@ -1,92 +1,127 @@
 <template>
-  <div>
-    <h1>{{ msg }}</h1>
-    <button class="button" v-on:click="helloCall()">Call API</button>
-    <div class="search-params">
-      <input type="text" v-model="searchString" placeholder="Search">
-    </div>
-    <div v-if="ready" class="data">
-      <p>API says:</p>
-      <transition-group name="fade">
-        <div v-for="(entry, key) in games.data" v-bind:key="key">
-          <pre>
-            <code>{{ key }} : {{ entry }}</code>
-          </pre>
+  <div id="content-wrapper">
+      <div id="content">
+        <navbar></navbar>
+        <div class="main container">
+            <router-view></router-view>
         </div>
-      </transition-group>
-    </div>
-    <div v-else-if="loading" class="loading">
-      <span class="preloader"></span>
-    </div>
+        <footer class="footer">
+            <div class="col-sm-12">
+                <a href="#" title="">Impressum</a> <span>|</span> <a href="#" title="">Datenschutz</a>
+            </div>
+        </footer>
+      </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
+import { mapActions } from 'vuex'
 
 export default {
-  data: function() {
+  name: 'app',
+  data () {
     return {
-      // note: changing this line won't causes changes
-      // with hot-reload because the reloaded component
-      // preserves its current state and we are modifying
-      // its initial state.
-      msg: 'Welcome to the Search!',
-      games: '',
-      error: {},
-      searchString: '',
-      loading: false,
-      ready: false
+      loading: true,
+      ready: true,
+      config: {
+        fields: ['id', 'name', 'images'],
+        perPage: 100,
+        sortBy: 'original_release_date',
+        sortDir: 'asc',
+        filters: [
+          {
+            field: 'original_release_date',
+            start: new Date('1900-01-01'),
+            end: new Date()
+          }
+        ]
+      }
     }
   },
+  mounted () {
+    // this.getGames()
+    // this.getGenres()
+    this.getPlatforms(this.config)
+  },
   methods: {
-    helloCall: function() {
-      this.loading = true
-      axios.get('/api/search/' + this.searchString).then(
-        response => {
-          console.log(response)
-          this.games = response
-          this.loading = false
-          this.ready = true
-        },
-        error => {
-          console.log(error)
-          this.error = error
-        })
-    }
+    ...mapActions([
+      'getGames',
+      'getGenres',
+      'getPlatforms'
+    ])
   }
 }
 </script>
 
 <style lang="sass">
-body {
-  font-family: Open Sans, sans-serif;
-}
-.loading {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.preloader {
-  display: inline-block;
-  margin: 5em;
-  border-width: 30px;
-  border-radius: 50%;
-  border-style: solid;
-  border-color: #444 transparent;
-  animation: spin 1s linear infinite;
+@import url('https://fonts.googleapis.com/css?family=Electrolize');
+
+$brand-primary: turquoise;
+$gray-medium: #d2d2d2;
+$gray-dark: #292b2c;
+
+$sidebarWidth: 15%;
+$header-height: 55px;
+$footer-height: 45px;
+
+#app {
+  font-family: Helvetica, 'OpenSans', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #2c3e50;
 }
 
-@keyframes spin {
-  100% {  transform: rotate(359deg); }
+/* Main styles
+-------------------------------------------------- */
+body, html {
+  margin: 0;
+  padding: 0;
 }
 
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s
+// section {
+//   display: flex;
+//   align-items:center;
+//   height: 100%;
+// }
+
+h1, h2, h3, h4, h5, h6, a, button, .btn, input {
+  font-family: 'Electrolize', sans-serif;
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
-  opacity: 0
+
+#content-wrapper {
+  #sidebar {
+    background-color: $gray-dark;
+    width: $sidebarWidth;
+    display: inline-block;
+  }
+  #content {
+    .navbar {
+      border-radius: 0px;
+      position: fixed;
+      height: $header-height;
+      width: 100%;
+      top:0;
+      z-index:999;
+    }
+    background: $gray-medium;
+    
+    .main {
+      margin-top: $header-height;
+    }
+
+    .footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      height: $footer-height;
+      background-color: $gray-dark;
+      z-index: 99;
+      color: $brand-primary;
+      a, span {
+        color: $brand-primary;
+      }
+    }
+  }
 }
+
 </style>
