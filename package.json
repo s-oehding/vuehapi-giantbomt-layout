@@ -20,6 +20,8 @@
     "inert": "^4.1.0",
     "moment": "^2.18.1",
     "node-sass": "^4.5.1",
+    "qs": "^6.4.0",
+    "qs-objects": "^0.1.2",
     "sass-loader": "^4.1.1",
     "slick-carousel": "^1.6.0",
     "three": "^0.84.0",

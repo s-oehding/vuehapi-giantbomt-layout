@@ -24,14 +24,12 @@ export default {
       loading: true,
       ready: true,
       config: {
-        fields: ['id', 'name', 'images'],
-        perPage: 100,
         sortBy: 'original_release_date',
         sortDir: 'asc',
         filters: [
           {
             field: 'original_release_date',
-            start: new Date('1900-01-01'),
+            start: new Date('2010-01-01'),
             end: new Date()
           }
         ]
@@ -39,7 +37,7 @@ export default {
     }
   },
   mounted () {
-    // this.getGames()
+    this.getGames(this.config)
     // this.getGenres()
     this.getPlatforms(this.config)
   },

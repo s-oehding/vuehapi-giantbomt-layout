@@ -1,5 +1,5 @@
 import axios from 'axios'
-
+import Qs from 'qs'
 const state = {
   games: [],
   apiSearch: {
@@ -21,9 +21,15 @@ const mutations = {
 
 const actions = {
   getGames: ({commit}, config) => {
-    console.log(config)
-    axios.get('/api/games', config).then(
+    console.log('Games Config: ', {params: config})
+    axios.get('/api/games', {
+      params: config,
+      paramsSerializer: function(params) {
+        return Qs.stringify(config, {arrayFormat: 'repeat'})
+      }
+    }).then(
       response => {
+        console.log(response)
         commit('SET_GAMES', response)
       },
       error => {

@@ -1,5 +1,5 @@
 import axios from 'axios'
-
+import Qs from 'qs'
 const state = {
   platforms: []
 }
@@ -18,40 +18,37 @@ const mutations = {
 
 const actions = {
   getPlatforms: ({commit}, config) => {
-    axios.get('/api/platforms', config).then(
+    axios.get('/api/platforms', {params: {perPage: 100}}).then(
       response => {
-        // console.log('Platforms config: ', config)
-        console.log('Meta response: ')
-        console.log('TotalPages', response.data.number_of_total_pages)
-        let fields = config.fields
-        let filters = config.filters
-        let sortBy = config.sortBy
-        let sortDir = config.sortDir
+        // console.log('Meta response: ', response)
+        // console.log('TotalPages: ', response.data.number_of_total_pages)
+        // let fields = config.fields
+        // let filters = config.filters
+        // let sortBy = config.sortBy
+        // let sortDir = config.sortDir
         for (var i = 1; i <= response.data.number_of_total_pages; i++) {
           axios.get('/api/platforms', {
             params: {
               page: i,
-              fields,
-              filters,
-              sortBy,
-              sortDir
+              perPage: 100,
+              config
+            },
+            paramsSerializer: function(params) {
+              return Qs.stringify(params, {arrayFormat: 'repeat'})
             }
           }).then(
             response => {
-              console.log('Platforms page: ', response)
-              // console.log('Platforms response: ', response.data)
+              // console.log('Platforms page: ' + response.config.params.page, response)
               commit('SET_PLATFORMS', response)
               return response
             },
             error => {
-              console.log(error)
-              this.error = error
+              console.error(error)
             })
         }
       },
       error => {
-        console.log(error)
-        this.error = error
+        console.error(error)
       })
   }
 }

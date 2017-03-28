@@ -8,6 +8,7 @@ module.exports = [
     path: '/api/platforms',
     handler: function (request, reply) {
       gb.platforms.list(request.query, (err, res, json) => {
+        console.log(request.query)
         reply(json)
       });
     }
