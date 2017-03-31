@@ -8,7 +8,7 @@
 import _ from 'lodash'
 import $ from 'jquery'
 import * as THREE from 'three/build/three.js'
-import 'three-trackballcontrols'
+import TrackballControls from 'three-trackballcontrols'
 import Hexasphere from 'hexasphere.js'
 
 export default {
@@ -33,7 +33,6 @@ export default {
         let renderer = new THREE.WebGLRenderer({ antialias: true })
 
         renderer.setSize(width, height)
-
         var cameraDistance = 65
         var camera = new THREE.PerspectiveCamera(cameraDistance, width / height, 1, 200)
         camera.position.z = -cameraDistance
@@ -93,31 +92,40 @@ export default {
             scene.add(new THREE.Line(geometry, lineMaterial))
           }
         }
-
         var controls
-        controls = new THREE.TrackballControls(camera)
-        controls.rotateSpeed = 1.0
-        controls.zoomSpeed = 1.2
-        controls.panSpeed = 0.8
-        controls.noZoom = false
-        controls.noPan = false
-        controls.staticMoving = true
-        controls.dynamicDampingFactor = 0.3
-        controls.keys = [ 65, 83, 68 ]
-        controls.addEventListener('change', render)
+        controls = new TrackballControls(camera, renderer.domElement)
+        renderer.render(scene, camera)
+        controls.update()
+        var lastTime = Date.now()
+        var cameraAngle = 90
+
+        var tick = function () {
+          var dt = Date.now() - lastTime
+
+          var rotateCameraBy = (2 * Math.PI) / (200000 / dt)
+          cameraAngle += rotateCameraBy
+
+          lastTime = Date.now()
+
+          camera.position.x = cameraDistance * Math.cos(cameraAngle)
+          camera.position.y = Math.sin(cameraAngle) * 10
+          camera.position.z = cameraDistance * Math.sin(cameraAngle)
+          camera.lookAt(scene.position)
+
+          renderer.render(scene, camera)
+
+          window.requestAnimationFrame(tick)
+          controls.update()
+        }
 
         function onWindowResize () {
           camera.aspect = window.innerWidth / window.innerHeight
           camera.updateProjectionMatrix()
           renderer.setSize(window.innerWidth, window.innerHeight)
         }
-
-        function render() {
-          renderer.render(scene, camera)
-        }
-
         window.addEventListener('resize', onWindowResize, false)
         $('#map').append(renderer.domElement)
+        window.requestAnimationFrame(tick)
         window.hexasphere = hexasphere
       }, 1000)
     }

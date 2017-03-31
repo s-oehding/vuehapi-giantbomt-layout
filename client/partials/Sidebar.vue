@@ -1,9 +1,17 @@
 <template>
-  <div id="sidebar">
-  <div class="logo">
-    <img src="../assets/logo.png" alt="">
-  </div>
-  </div>
+  <aside class="col-sm-3 aside">
+    <b-form-fieldset
+    :feedback="feedback" 
+    description="We'll convert your name to lowercase automatically."
+    label="Example Label"
+    :state="state"
+    :label-size="1"
+    >
+      <b-form-input></b-form-input>
+      <b-form-input></b-form-input>
+    
+    </b-form-fieldset>
+  </aside>
 </template>
 
 <script>
@@ -21,17 +29,8 @@ export default {
 </script>
 
 <style lang="sass">
-#sidebar {
-  padding: 0 .5rem;
-
-  .logo {
-    display: block;
-    padding: 2rem;
-    text-align: center;
-    img {
-      width: 100%;
-      height: auto;
-    }
-  }
+aside {
+  background: #292b2c;
+  color: rgba(255, 255, 255, 0.5);
 }
 </style>

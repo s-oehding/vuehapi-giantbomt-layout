@@ -17,6 +17,12 @@ module.exports = [
       gb.genres.list(config, (err, res, json) => {
         reply(json)
       });
+    },
+    config: {
+        cache: {
+            expiresIn: 30 * 1000,
+            privacy: 'private'
+        }
     }
   }
 ]

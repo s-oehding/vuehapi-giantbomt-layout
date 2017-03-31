@@ -1,5 +1,5 @@
 <template>
-  <time :datetime="this.data.first_release_date">{{ this.data.first_release_date | toDate }}</time>
+  <time :datetime="data.original_release_date">{{ data.original_release_date | toDate }}</time>
 </template>
 
 <script>

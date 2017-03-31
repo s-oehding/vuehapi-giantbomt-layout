@@ -1,5 +1,5 @@
 <template>
-  <timeline :data="platforms" :ready="true"></timeline>
+  <timeline v-if="platforms.ready" :data="platforms.platforms" :ready="true"></timeline>
 </template>
 
 <script>

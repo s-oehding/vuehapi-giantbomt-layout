@@ -2,50 +2,52 @@
   <div id="content-wrapper">
       <div id="content">
         <navbar></navbar>
-        <div class="main container">
+        <div id="main" class="main">
             <router-view></router-view>
         </div>
-        <footer class="footer">
-            <div class="col-sm-12">
-                <a href="#" title="">Impressum</a> <span>|</span> <a href="#" title="">Datenschutz</a>
-            </div>
-        </footer>
+        <site-footer></site-footer>
       </div>
   </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
-
 export default {
   name: 'app',
   data () {
     return {
       loading: true,
-      ready: true,
+      ready: false,
       config: {
-        sortBy: 'original_release_date',
-        sortDir: 'asc',
-        filters: [
-          {
-            field: 'original_release_date',
-            start: new Date('2010-01-01'),
-            end: new Date()
-          }
-        ]
+        perPage: 100,
+        fields: ['id', 'name', 'image', 'release_date']
       }
     }
   },
   mounted () {
-    this.getGames(this.config)
-    // this.getGenres()
-    this.getPlatforms(this.config)
+    if (this.genres.genres.length === 0) {
+      this.getGenres()
+    }
+    if (this.platforms.platforms.length === 0) {
+      this.getPlatforms(this.config)
+    }
+    if (this.platforms.ready === true && this.genres.ready === true) {
+      this.loading = false
+      this.ready = true
+    }
+  },
+  computed: {
+    genres () {
+      return this.$store.getters.genres
+    },
+    platforms () {
+      return this.$store.getters.platforms
+    }
   },
   methods: {
     ...mapActions([
-      'getGames',
-      'getGenres',
-      'getPlatforms'
+      'getPlatforms',
+      'getGenres'
     ])
   }
 }
@@ -86,6 +88,10 @@ h1, h2, h3, h4, h5, h6, a, button, .btn, input {
   font-family: 'Electrolize', sans-serif;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+}
+
 #content-wrapper {
   #sidebar {
     background-color: $gray-dark;
@@ -93,33 +99,34 @@ h1, h2, h3, h4, h5, h6, a, button, .btn, input {
     display: inline-block;
   }
   #content {
-    .navbar {
+    .nav {
+      background-color: $gray-dark;
       border-radius: 0px;
-      position: fixed;
       height: $header-height;
-      width: 100%;
-      top:0;
-      z-index:999;
+
+      .nav-item {
+        transition: all 0.25s ease-in-out;
+        &:hover {
+          color: $brand-primary;
+          transition: all 0.25s ease-in-out;
+        }
+      }
     }
     background: $gray-medium;
-    
-    .main {
-      margin-top: $header-height;
-    }
 
-    .footer {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      height: $footer-height;
-      background-color: $gray-dark;
-      z-index: 99;
-      color: $brand-primary;
-      a, span {
-        color: $brand-primary;
-      }
+    .main {
+      display: block;
+      margin-top: 71px;
+      margin-bottom: 25px;
+      min-height: calc(100vh - 96px);
     }
   }
 }
-
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 999;
+  padding: .5rem 0;
+}
 </style>

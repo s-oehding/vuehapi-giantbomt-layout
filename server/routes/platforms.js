@@ -11,6 +11,28 @@ module.exports = [
         console.log(request.query)
         reply(json)
       });
+    },
+    config: {
+        cache: {
+            expiresIn: 30 * 1000,
+            privacy: 'private'
+        }
+    }
+  },
+  {
+    method: 'GET',
+    path: '/api/platform/{id}',
+    handler: function (request, reply) {
+      gb.platforms.get(request.params.id, (err, res, json) => {
+        console.log('Platform Detail: ', request.query)
+        reply(json)
+      });
+    },
+    config: {
+        cache: {
+            expiresIn: 30 * 1000,
+            privacy: 'private'
+        }
     }
   }
 ]

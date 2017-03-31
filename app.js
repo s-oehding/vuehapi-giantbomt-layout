@@ -31,6 +31,8 @@ if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test') {
     }
   }, {
     register: HapiWebpackHotMiddleware
+  }, {
+    register: require('hapi-qs')
   }], function (err) {
     if (err) {
       throw err;

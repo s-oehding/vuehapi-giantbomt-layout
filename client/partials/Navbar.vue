@@ -1,36 +1,37 @@
 <template>
-<nav class="nav">
-  <div class="nav-left">
-    <a class="nav-item">
-      <img src="../assets/logo.png" alt="game-lounge">
-    </a>
-  </div>
+<b-navbar toggleable fixed="top" type="inverse" variant="inverse">
 
-  <div class="nav-center">
+  <b-nav-toggle target="nav_collapse"></b-nav-toggle>
+  <b-link class="navbar-brand" to="/">
+    <span><img src="../assets/logo.png" alt="game-lounge" style="max-height: 40px;"> GameLounge</span>
+  </b-link>
 
-  </div>
-
-  <!-- This "nav-toggle" hamburger menu is only visible on mobile -->
-  <!-- You need JavaScript to toggle the "is-active" class on "nav-menu" -->
-  <span class="nav-toggle">
-    <span></span>
-    <span></span>
-    <span></span>
-  </span>
-
-  <!-- This "nav-menu" is hidden on mobile -->
-  <!-- Add the modifier "is-active" to display it on mobile -->
-  <div class="nav-right nav-menu">
-    <router-link class="nav-item is-tab" to="/map"><span class="icon"><i class="fa fa-map"></i></span> Map</router-link>
-    <router-link class="nav-item is-tab" to="/search"><span class="icon"><i class="fa fa-search"></i></span> Search</router-link>
-    <router-link class="nav-item is-tab" to="/platforms"><span class="icon"><i class="fa fa-search"></i></span> Platforms</router-link>
-    <router-link class="nav-item is-tab" to="/timeline"><span class="icon"><i class="fa fa-time"></i></span> Timeline</router-link>
-    <span class="nav-item">
-      <input class="input" type="text" placeholder="Search Games" v-model="$parent.searchString">
-      <router-link v-on:click.prevent="fetchGames" to="/search" class="button">Search</router-link>
-    </span>
-  </div>
-</nav>
+  <b-collapse is-nav id="nav_collapse">
+    
+    <b-nav is-nav-bar>
+      <b-nav-item to="/" class="nav-link" linkActiveClass="active" exact>Home</b-nav-item>
+      <b-nav-item to="/map" class="nav-link" linkActiveClass="active" exact>Map</b-nav-item>
+      <b-nav-item to="/search" class="nav-link" linkActiveClass="active" exact>Search</b-nav-item>
+      <b-nav-item to="/platforms" class="nav-link" linkActiveClass="active" exact>Platforms</b-nav-item>
+      <!-- <b-nav-item to="/timeline" class="nav-link" linkActiveClass="active" exact>Timeline</b-nav-item> -->
+    </b-nav>
+    
+    <b-nav is-nav-bar class="ml-auto">
+      <!-- Navbar dropdowns -->
+      <b-nav-item-dropdown right-alignment>
+        
+        <!-- Using text slot -->
+        <template slot="text">
+          <span>User</span>
+        </template>
+        
+        <b-dropdown-item to="#">Profile</b-dropdown-item>
+        <b-dropdown-item to="#">Signout</b-dropdown-item>
+      </b-nav-item-dropdown>
+     
+    </b-nav>
+  </b-collapse>
+</b-navbar>
 </template>
 
 <script>
@@ -50,8 +51,13 @@ export default {
 
 <style lang="sass">
  .navbar {
-  .router-link-active {
-    color: turquoise !important;
+  .navbar-brand {
+    color: turquoise;
+  }
+  .nav-link {
+    &.active {
+      color: turquoise !important;
+    }
   }
  }
 </style>

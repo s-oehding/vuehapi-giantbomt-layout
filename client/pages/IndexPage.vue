@@ -1,24 +1,104 @@
 <template>
-  <div class="container main-index">
-    <div class="row">
-      <div class="col-sm-12">
-        <h2 class="md-headline">Games Lounge</h2>
-        <p class="lead">Your ultimate source for game history facts</p>
-        <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
-      </div>
-
-      <div class="col-sm-12">
-        <h2 class="md-headline">Full-featured</h2>
-        <p>You can generate and use themes dynamically, use components on demand, take advantage of UI Elements and Components with an ease-to-use API and more...</p>
-      </div>
+  <div>
+    <preloader v-if="this.status === 'loading'"><p class="await">Loading...</p></preloader>
+    <div v-else-if="this.status === 'ready'" id="grid">
+      <!-- <img v-for="game in this.games.games" src="game.image.small_url" class="hex" :alt="game.name"> -->
+       <router-link v-for="game in this.games.games" :to="{ name: 'game', params: { id: game.id }}">
+      <lazy-background
+        :image-source="game.image.small_url"
+        loading-image="../../public/spinner.svg"
+        error-image="/img/error.png"
+        image-class="hex"
+        background-size="cover"
+        :image-success-callback="init">
+      </lazy-background>
+      </router-link>
     </div>
   </div>
 </template>
 
-<style lang="sass" scoped>
-  .main-index {
-    display: flex;
-    align-items: center;
-    height: 100%;
+<script>
+import grid from 'hex-grid'
+
+import { mapActions } from 'vuex'
+export default {
+  data () {
+    return {
+      config: {
+        perPage: 100,
+        fields: ['id', 'name', 'image']
+      }
+    }
+  },
+  mounted () {
+    if (this.games.games.length === 0) {
+      this.getGames(this.config)
+    }
+    if (this.games.ready) {
+      this.$nextTick(function() {
+        this.init()
+      })
+    }
+  },
+  methods: {
+    init () {
+      this.$nextTick(function() {
+        var hexes = document.querySelectorAll('.hex')
+        var root = document.querySelector('#grid')
+        /* eslint-disable no-unused-vars */
+        var g
+        function scan () {
+          g = grid({ element: root, spacing: 8 }, hexes)
+        }
+
+        scan()
+        window.addEventListener('resize', scan)
+        window.addEventListener('load', scan)
+
+        // var prev
+        // root.addEventListener('mousemove', function (ev) {
+        //   var h = g.lookup(ev.pageX, ev.pageY)
+        //   if (!h) return
+        //   if (prev) prev.style.opacity = 0.5
+        //   h.style.opacity = 1
+        //   prev = h
+        // })
+      })
+    },
+    ...mapActions([
+      'getGames'
+    ])
+  },
+  computed: {
+    games () {
+      return this.$store.getters.games
+    },
+    status () {
+      if (this.games.ready && !this.games.loading) {
+        return 'ready'
+      } else if (!this.games.ready && this.games.loading) {
+        return 'loading'
+      } else if (!this.games.ready && !this.games.loading) {
+        return 'waiting'
+      }
+    }
   }
+}
+</script>
+
+<style lang="sass" scoped>
+.hex {
+  width: 150px;
+  height: 150px;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  object-fit: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  .overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #000;
+  }
+}
 </style>

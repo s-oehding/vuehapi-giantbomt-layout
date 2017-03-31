@@ -8,8 +8,8 @@
       </div>
       <div class="content-wrapper">
         <h6>{{ this.name }}</h6>
-        <router-link :to="{ name: 'game', params: { id: this.id }}" class="btn btn-success">View Details</router-link>
-        <p v-if="this.developer.name" class="desc"><span class="text-muted">Developer: </span> {{ this.developer.name }}</p>
+        <router-link :to="{ name: 'platform', params: { id: this.id }}" class="btn btn-success">View Details</router-link>
+        <!-- <p v-if="this.developer.name" class="desc"><span class="text-muted">Developer: </span> {{ this.developer.name }}</p> -->
       </div>
     </div>
     <div class="timeline-date"><i class="fa fa-calendar" aria-hidden="true"></i> {{ this.releasedate }}</div>
@@ -20,7 +20,7 @@
 <script>
 export default {
   name: 'timeline-item',
-  props: ['id', 'developer', 'cover', 'name', 'summary', 'releasedate']
+  props: ['id', 'cover', 'name', 'releasedate']
 }
 </script>
 

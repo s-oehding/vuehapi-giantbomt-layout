@@ -6,13 +6,17 @@ const state = {
 
 const getters = {
   genres: state => {
-    return state.genres
+    return state
   }
 }
 
 const mutations = {
   SET_GENRES (state, response) {
     state.genres = response.data.results
+    if (state.genres.length === response.data.number_of_total_results) {
+      state.loading = false
+      state.ready = true
+    }
   }
 }
 

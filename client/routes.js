@@ -6,6 +6,7 @@ import MapPage from './pages/MapPage'
 import GameDetail from './pages/GameDetail'
 import TimelinePage from './pages/TimelinePage'
 import PlatformsPage from './pages/PlatformsPage'
+import PlatformDetail from './pages/PlatformDetail'
 import SearchPage from './pages/SearchPage'
 import Error404 from './pages/Error'
 
@@ -29,6 +30,11 @@ const routes = [
     path: '/platforms',
     name: 'Platforms',
     component: PlatformsPage
+  },
+  {
+    path: '/platform/:id',
+    name: 'platform',
+    component: PlatformDetail
   },
   {
     path: '/search',

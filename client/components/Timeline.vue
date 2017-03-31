@@ -7,10 +7,8 @@
           :key="entry.release_date"
           :id="entry.id"
           :cover="entry.image.super_url"
-          :developer="entry.company"
           :name="entry.name"
           :releasedate="entry.release_date | toDate"
-          :summary="entry.deck"
           ></timeline-item>
       </ul>
     </div>
