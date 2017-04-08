@@ -29,7 +29,7 @@ export default {
       this.getGenres()
     }
     if (this.platforms.platforms.length === 0) {
-      this.getPlatforms(this.config)
+      this.getPlatforms()
     }
     if (this.platforms.ready === true && this.genres.ready === true) {
       this.loading = false

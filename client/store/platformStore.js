@@ -66,6 +66,7 @@ const actions = {
         console.log('ERROR', error)
       })
   },
+
   getPlatform: ({commit}, id) => {
     commit('CLEAR_PLATFORM')
     axios.get('/api/platform/' + id).then(

@@ -2,6 +2,7 @@
  * Pages
  */
 import IndexPage from './pages/IndexPage'
+import FactsPage from './pages/FactsPage'
 import MapPage from './pages/MapPage'
 import GameDetail from './pages/GameDetail'
 import TimelinePage from './pages/TimelinePage'
@@ -15,6 +16,11 @@ const routes = [
     path: '/',
     name: 'Index',
     component: IndexPage
+  },
+  {
+    path: '/facts',
+    name: 'Facts',
+    component: FactsPage
   },
   {
     path: '/map',

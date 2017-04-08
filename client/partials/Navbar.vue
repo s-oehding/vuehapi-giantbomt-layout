@@ -10,6 +10,7 @@
     
     <b-nav is-nav-bar>
       <b-nav-item to="/" class="nav-link" linkActiveClass="active" exact>Home</b-nav-item>
+      <b-nav-item to="/facts" class="nav-link" linkActiveClass="active" exact>Facts</b-nav-item>
       <b-nav-item to="/map" class="nav-link" linkActiveClass="active" exact>Map</b-nav-item>
       <b-nav-item to="/search" class="nav-link" linkActiveClass="active" exact>Search</b-nav-item>
       <b-nav-item to="/platforms" class="nav-link" linkActiveClass="active" exact>Platforms</b-nav-item>

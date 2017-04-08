@@ -33,7 +33,7 @@ import './directives/index'
 /**
  * App Routes
  */
-Vue.use(VueRouter)
+Vue.use(VueRouter, 'localhost:3000')
 import routes from './routes.js'
 
 /**

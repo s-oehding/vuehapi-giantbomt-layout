@@ -42,6 +42,9 @@ module.exports = {
         }
       }
     }, {
+      test: /\.json/,
+      loader: 'json',
+    }, {
       test: /\.js$/,
       loader: 'babel-loader',
       exclude: /node_modules/
