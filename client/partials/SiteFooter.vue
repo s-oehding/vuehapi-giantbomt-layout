@@ -1,15 +1,20 @@
 <template>
     <footer class="footer">
-        <div class="container">
-            <div class="row">
-              <div class="col">
+        <div class="container-fluid">
+            <div class="row justify-content-sm-center">
+              <div class="col flex-md-column">
                 <b-button-group>
-                  <b-button><i class="fa fa-twitter"></i></b-button>
-                  <b-button><i class="fa fa-facebook"></i></b-button>
-                  <b-button><i class="fa fa-github"></i></b-button>
+                  <b-button variant="outline-primary"><i class="fa fa-twitter"></i></b-button>
+                  <b-button variant="outline-primary"><i class="fa fa-facebook"></i></b-button>
+                  <b-button variant="outline-primary"><i class="fa fa-github"></i></b-button>
                 </b-button-group>
               </div>
-              <a href="#" title="">Impressum</a> <span>|</span> <a href="#" title="">Datenschutz</a>
+              <div class="flex-md-column-reverse">
+                <b-button-group>
+                  <b-button variant="outline-primary"><i class="fa fa-lock"></i> Datenschutz</b-button>
+                  <b-button variant="outline-primary"><i class="fa fa-shield"></i> Impressum</b-button>
+                </b-button-group>
+              </div>
             </div>
         </div>
     </footer>

@@ -35,8 +35,11 @@ module.exports = {
       loader: 'babel-loader',
       exclude: /node_modules/
     }, {
-        test: /\.sass$/,
-        loaders: ["style", "css", "sass"]
+      test: /\.sass$/,
+      use: ['style-loader', 'css-loader', 'sass-loader']
+    },  {
+      test: /\.scss$/,
+      use: ['style-loader', 'css-loader', 'sass-loader']
     }, {
       test: /\.css$/,
       use: [ 'style-loader', 'css-loader' ]
@@ -45,7 +48,7 @@ module.exports = {
       loader: 'vue-html-loader'
     }, {
       test: /\.json/,
-      loader: 'json',
+      loader: 'json-loader',
     }, {
       test: /\.(png|jpg|gif|svg)$/,
       loader: 'url-loader',

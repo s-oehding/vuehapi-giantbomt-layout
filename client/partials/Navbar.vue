@@ -16,21 +16,6 @@
       <b-nav-item to="/platforms" class="nav-link" linkActiveClass="active" exact>Platforms</b-nav-item>
       <!-- <b-nav-item to="/timeline" class="nav-link" linkActiveClass="active" exact>Timeline</b-nav-item> -->
     </b-nav>
-    
-    <b-nav is-nav-bar class="ml-auto">
-      <!-- Navbar dropdowns -->
-      <b-nav-item-dropdown right-alignment>
-        
-        <!-- Using text slot -->
-        <template slot="text">
-          <span>User</span>
-        </template>
-        
-        <b-dropdown-item to="#">Profile</b-dropdown-item>
-        <b-dropdown-item to="#">Signout</b-dropdown-item>
-      </b-nav-item-dropdown>
-     
-    </b-nav>
   </b-collapse>
 </b-navbar>
 </template>

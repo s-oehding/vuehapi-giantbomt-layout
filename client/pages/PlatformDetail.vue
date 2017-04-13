@@ -3,8 +3,8 @@
     <preloader v-if="status === 'loading'">Loading Platform Details</preloader>
     <div v-else-if="status === 'ready'" class="container platform-container">
       <div class="row">
-        <div v-if="platformDetail.image.super_url" class="col-sm-12 cover-image">
-          <img :src="platformDetail.image.super_url" alt="">
+        <div v-if="platformDetail.image" class="col-sm-12 cover-image">
+          <img v-lazy="platformDetail.image.screen_url" alt="">
         </div>
         <div class="col-sm-12">
           <h1 class="jumbotron">{{ platformDetail.name }}</h1>
@@ -17,9 +17,6 @@
         <div class="col-sm-12 col-md-6">
           <h4>Summary:</h4>
           <p>{{ platformDetail.deck }}</p>
-          <hr>
-          <h4>Story:</h4>
-          <p>{{ platformDetail.description }}</p>
           <hr>
         </div>
         <div class="col-sm-12 col-md-6">
@@ -37,7 +34,12 @@
             </div>
           </div>
         </div>
-      </div>  
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <div v-html="platformDetail.description"></div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -136,5 +138,8 @@ export default {
       height: auto !important;
     }
   }
+}
+figcaption {
+  font-size: 75%;
 }
 </style>

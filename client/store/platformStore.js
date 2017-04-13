@@ -38,11 +38,12 @@ const mutations = {
 
 const actions = {
   getPlatforms: ({commit}, config) => {
-    axios.get('/api/platforms', {params: {perPage: config.perPage}}).then(
+    axios.get('/api/platforms', {params: config}).then(
       response => {
         // console.log('Meta response: ', response)
         // console.log('TotalPages: ', response.data.number_of_total_pages)
-        for (var i = 1; i <= response.data.number_of_total_pages; i++) {
+        commit('SET_PLATFORMS', response)
+        for (var i = config.page + 1; i <= response.data.number_of_total_pages; i++) {
           axios.get('/api/platforms', {
             params: {
               page: i,

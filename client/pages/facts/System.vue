@@ -8,19 +8,19 @@
     <div class="row">
       <div class="col-md-6">
         <h4>CPU</h4>
-        <chart :data="this.dataCPU"></chart>
+        <chart chart-id="cpu-chart" :data="this.dataCPU" :options:="this.options"></chart>
       </div>
       <div class="col-md-6">
         <h4>RAM</h4>
-        <chart :data="this.dataRAM"></chart>
+        <chart chart-id="ram-chart" :data="this.dataRAM" :options:="this.options"></chart>
       </div>
       <div class="col-md-6">
         <h4>Grafikspeicher</h4>
-        <chart :data="this.dataGPU"></chart>
+        <chart chart-id="gfx-chart" :data="this.dataGPU" :options:="this.options"></chart>
       </div>
       <div class="col-md-6">
         <h4>Farben</h4>
-        <chart :data="this.dataCOLOR"></chart>
+        <chart chart-id="col-chart" :data="this.dataCOLOR" :options:="this.options"></chart>
       </div>
     </div>
   </div>
@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import Chart from '../../components/charts/newChart'
+import Chart from '../../components/charts/lineChart'
 export default {
   name: 'system',
   components: {

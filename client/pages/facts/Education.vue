@@ -20,27 +20,14 @@ export default {
   data () {
     return {
       data: {
-        datasets: [{
-          data: [
-            7.2,
-            10.5,
-            6.1,
-            6.6
-          ],
-          backgroundColor: [
-            '#FF6384',
-            'cyan',
-            '#FFCE56',
-            'turquoise'
-          ],
-          label: 'Bildungshintergrund Deutscher Gamer (in Mio)' // for legend
-        }],
-        labels: [
-          'Hauptschulabschluss',
-          'Mittlere Reife',
-          'Abitur',
-          'Hochschulabschluss'
-        ]
+        datasets: [
+          {
+            data: [7.2, 10.5, 6.1, 6.6],
+            backgroundColor: ['#FF6384', 'cyan', '#FFCE56', 'turquoise'],
+            label: 'Bildungshintergrund Deutscher Gamer (in Mio)' // for legend
+          }
+        ],
+        labels: ['Hauptschulabschluss', 'Mittlere Reife', 'Abitur', 'Hochschulabschluss']
       },
       options: {
         responsive: true,

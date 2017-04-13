@@ -1,5 +1,5 @@
 <template>
-<div class="container-fluid">
+<div id="facts" class="container">
   <system></system>
   <hr>
   <education></education>
@@ -30,5 +30,7 @@ export default {
 </script>
 
 <style>
-  
+#facts {
+  padding: 2rem 0;
+}
 </style>

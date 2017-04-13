@@ -1,12 +1,10 @@
 <template>
-  <div id="content-wrapper">
-      <div id="content">
-        <navbar></navbar>
-        <div id="main" class="main">
-            <router-view></router-view>
-        </div>
-        <site-footer></site-footer>
+  <div id="main">
+      <navbar></navbar>
+      <div id="content" class="content">
+          <router-view></router-view>
       </div>
+      <site-footer></site-footer>
   </div>
 </template>
 
@@ -19,17 +17,17 @@ export default {
       loading: true,
       ready: false,
       config: {
-        perPage: 100,
-        fields: ['id', 'name', 'image', 'release_date']
+        page: 1,
+        perPage: 100
       }
     }
   },
   mounted () {
     if (this.genres.genres.length === 0) {
-      this.getGenres()
+      this.getGenres(this.config)
     }
     if (this.platforms.platforms.length === 0) {
-      this.getPlatforms()
+      this.getPlatforms(this.config)
     }
     if (this.platforms.ready === true && this.genres.ready === true) {
       this.loading = false
@@ -55,8 +53,9 @@ export default {
 
 <style lang="sass">
 @import url('https://fonts.googleapis.com/css?family=Electrolize');
+@import "assets/scss/variables";
 
-$brand-primary: turquoise;
+$brand-primary: turquoise !important;
 $gray-medium: #d2d2d2;
 $gray-dark: #292b2c;
 
@@ -68,7 +67,7 @@ $footer-height: 45px;
   font-family: Helvetica, 'OpenSans', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 /* Main styles
@@ -76,13 +75,8 @@ $footer-height: 45px;
 body, html {
   margin: 0;
   padding: 0;
+  background: #8b8c8d;
 }
-
-// section {
-//   display: flex;
-//   align-items:center;
-//   height: 100%;
-// }
 
 h1, h2, h3, h4, h5, h6, a, button, .btn, input {
   font-family: 'Electrolize', sans-serif;
@@ -92,41 +86,40 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: bold;
 }
 
-#content-wrapper {
-  #sidebar {
+#sidebar {
+  background-color: $gray-dark;
+  width: $sidebarWidth;
+  display: inline-block;
+}
+#main {
+  .nav {
     background-color: $gray-dark;
-    width: $sidebarWidth;
-    display: inline-block;
-  }
-  #content {
-    .nav {
-      background-color: $gray-dark;
-      border-radius: 0px;
-      height: $header-height;
+    border-radius: 0px;
+    height: $header-height;
 
-      .nav-item {
+    .nav-item {
+      transition: all 0.25s ease-in-out;
+      &:hover {
+        color: $brand-primary;
         transition: all 0.25s ease-in-out;
-        &:hover {
-          color: $brand-primary;
-          transition: all 0.25s ease-in-out;
-        }
       }
     }
-    background: $gray-medium;
-
-    .main {
-      display: block;
-      margin-top: 71px;
-      margin-bottom: 25px;
-      min-height: calc(100vh - 96px);
-    }
   }
-}
-.footer {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  z-index: 999;
-  padding: .5rem 0;
+  // background: $gray-medium;
+
+  #content {
+    display: block;
+    margin-top: 71px;
+    margin-bottom: 50px;
+    min-height: calc(100vh - 96px);
+  }
+
+  .footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 999;
+    padding: .5rem 0;
+  }
 }
 </style>

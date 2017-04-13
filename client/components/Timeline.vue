@@ -6,7 +6,7 @@
           v-for="(entry, index) in sorted.data"
           :key="entry.release_date"
           :id="entry.id"
-          :cover="entry.image.super_url"
+          :cover="entry.image.small_url"
           :name="entry.name"
           :releasedate="entry.release_date | toDate"
           ></timeline-item>
@@ -93,6 +93,10 @@ $scroll-thumb: transparent;//#f1f5f7;
   overflow: scroll;
   scroll-behavior: smooth;
   padding: 2rem;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 #timeline {

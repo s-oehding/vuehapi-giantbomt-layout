@@ -1,9 +1,9 @@
 const giantbomb = require('giantbomb');
 const gb = giantbomb('e4e37a13e893b3617854a9d13a246ec90ba07bdb');
 
-const getData = function(request, next) {
-  gb.games.list(request, (err, res, json) => {
-    console.log(request)
+const getGame = function(id, next) {
+  gb.games.get(id, (err, res, json) => {
+    console.log('GET Game id: ', id)
     if (err) {
       next(err);
     } else {
@@ -19,13 +19,18 @@ var day = 24 * hour
 
 module.exports = [
   {
-    name: 'getData',
-    method: getData,
+    name: 'getGame',
+    method: getGame,
     options: {
       cache: {
         cache: 'redisCache',
-        expiresIn: 60 * second,
-        generateTimeout: 1000
+        expiresIn: 10 * minute,
+        staleIn: 5 * minute,
+        staleTimeout: 60 * second,
+        generateTimeout: 30 * second
+      },
+      generateKey: function (request) {
+        return JSON.stringify(request);
       }
     }
   }

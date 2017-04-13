@@ -3,7 +3,8 @@
     <div class="timeline-dot primary"><i class="fa fa-star"></i></div>
     <div class="timeline-panel">
       <div class="img-wrapper">
-        <img v-if="this.cover" :src="this.cover" :alt="name">
+        <!-- <img v-if="this.cover" :src="this.cover" :alt="name"> -->
+        <img v-if="this.cover" v-lazy="this.cover"/>
         <img v-else src="https://placehold.it/250/250" :alt="name">
       </div>
       <div class="content-wrapper">

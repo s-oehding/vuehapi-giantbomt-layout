@@ -4,7 +4,7 @@
   <div v-else-if="status === 'ready'" class="container game-container">
     <div class="row">
       <div v-if="gameDetail.image" class="col-sm-12 cover-image">
-        <img :src="gameDetail.image.screen_url" alt="gameDetail.name">
+        <img v-lazy="gameDetail.image.screen_url" alt="gameDetail.name">
       </div>
       <div class="col-sm-12">
         <h1 class="jumbotron">{{ gameDetail.name }}</h1>
@@ -18,9 +18,6 @@
       <div class="col-sm-12 col-md-6">
         <h4>Story:</h4>
         <p>{{ gameDetail.deck }}</p>
-        <hr>
-        <h4>Summary:</h4>
-        <div id="description"></div>
       </div>
       <div class="col-sm-12 col-md-6">
         <div class="row meta">
@@ -47,18 +44,32 @@
               </div>
             </div>
           </div>
-<!--           <div v-if="gameDetail.images" class="card col-sm-12">
+          <div v-if="gameDetail.images" class="card col-sm-12">
             <div class="card-block">
               <h4 class="card-title">Screenshots:</h4>
               <div class="card-text">
-                <ul class="list-inline">
-                  <img v-if="gameDetail.images" v-for="image in gameDetail.images" :src="image.screen_url">
-                  <p v-if="image.tags">{{ image.tags }}</p>
-                </ul>
+              <b-carousel 
+                controls
+                indicators
+                :interval="5000"
+                background="grey">
+                 <!-- Slides with image -->
+                  <b-carousel-slide
+                    v-for="screenshot in gameDetail.images"
+                    background="grey"
+                    height="300px"
+                    :img="screenshot.screen_url">
+                  </b-carousel-slide>
+              </b-carousel>
               </div>
             </div>
-          </div> -->
+          </div>
         </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <div id="story" v-html="gameDetail.description"></div>
       </div>
     </div>
     <div class="row">
@@ -92,10 +103,6 @@
 </template>
 
 <script>
-// import $ from 'jquery'
-import 'slick-carousel'
-// import 'slick-carousel/slick/slick.scss's
-// import 'slick-carousel/slick/slick-theme.scss's
 import { toDate } from '../filters'
 import { mapActions } from 'vuex'
 
@@ -146,6 +153,38 @@ export default {
 </script>
 
 <style lang="sass">
+@import "../assets/scss/variables";
+//
+// Basic Bootstrap table
+//
+#story {
+  table {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: $spacer;
+
+    th,
+    td {
+      padding: $table-cell-padding;
+      vertical-align: top;
+      border-top: $table-border-width solid $table-border-color;
+    }
+
+    thead th {
+      vertical-align: bottom;
+      border-bottom: (2 * $table-border-width) solid $table-border-color;
+    }
+
+    tbody + tbody {
+      border-top: (2 * $table-border-width) solid $table-border-color;
+    }
+
+    table {
+      background-color: $body-bg;
+    }
+  }
+}
+
 .game-container {
   margin-top: 55px;
   margin-bottom: 60px;
@@ -153,9 +192,6 @@ export default {
     a {
       color: #fff;
     }
-  }
-  .slick-slide {
-    height: auto;
   }
   .cover-image {
     margin: 2rem 0;
@@ -165,35 +201,9 @@ export default {
       margin:0 auto;
     }
   }
-  .slick-prev:before, .slick-next:before {
-    font-family: 'slick';
-    font-size: 2.25rem;
-    line-height: 2.25;
-    opacity: .75;
-    color: #292b2c;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    transition: all 0.25s ease;
-    &:hover {
-      color: turquoise;
-    }
+  .img-fluid {
+    width:100%;
   }
-  .slick-prev, .slick-next {
-    top: 100%;
-    font-size: 2.25rem;
-    width: 2.25rem;
-    height: 2.25rem;
-    line-height: 2.25rem;
-    z-index: 9999;
-  }
-
-  .slick-next {
-    right:2rem
-  }
-  .slick-prev {
-    left: 2rem;
-  }
-
   .card-img-top {
     object-fit: cover;
     padding-top: 1rem;

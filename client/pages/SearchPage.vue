@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <aside class="col-sm-3 aside">
+    <aside class="search-aside">
       <b-form-fieldset
       description="Search Games"
       label="Search games by name"
@@ -14,7 +14,7 @@
       :label-size="1">
         <label>Filter by Platform</label>
         <b-form-select v-model="params.config.filters[1].value[0]" :options="platformsSelect"></b-form-select>
-        <label>Filter by Genre</label>
+        <label>Filter by Genre</label><br>
         <b-form-select v-model="params.config.filters[2].value[0]" :options="genresSelect"></b-form-select>
       </b-form-fieldset>
       
@@ -29,7 +29,7 @@
       </b-form-fieldset>
       <b-button v-on:click="searchNow">SEARCH</b-button>
     </aside>
-    <div class="search-results offset-md-3 col-sm-9">
+    <div class="search-results">
       <v-client-table v-if="this.status === 'ready'" :data.sync="search.searchResults" :columns.sync="columns" :options="options" name="searchResults"></v-client-table>
       <preloader v-else-if="this.status === 'loading'">Loading...</preloader>
       <b-jumbotron v-else-if="this.status === 'waiting'" 
@@ -140,11 +140,22 @@ export default {
     width: 100%;
     padding: 2rem;
   }
-  .aside {
+  .search-aside {
     position: fixed;
     height: 100%;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    width: 375px;
+    .custom-select {
+      width:100%;
+    }
     .datepicker {
       color: black;
     }
+  }
+  .search-results {
+    margin-left: 375px;
+    float: left;
+    width: 100%;
   }
 </style>

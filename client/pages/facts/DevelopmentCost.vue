@@ -5,13 +5,15 @@
     <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.</p>
   </div>
   <div class="col-md-6">
-    <chart :data="this.data"></chart>
+    <chart chart-id="cost-chart" :data="this.data" :options="this.options"></chart>
   </div>
 </div>
 </template>
 
 <script>
 import Chart from '../../components/charts/barChart'
+
+let string = `<%= value + ' $' %>`
 export default {
   name: 'development-cost',
   components: {
@@ -20,31 +22,33 @@ export default {
   data () {
     return {
       data: {
+        labels: ['Pong 1972', 'Pac-Man 1980', 'GTA 5 2013', 'Destiny 2014'],
         datasets: [{
-          data: [
-            5000,
-            10000,
-            2300000,
-            4350000
-          ],
-          backgroundColor: [
-            '#FF6384',
-            'cyan',
-            '#FFCE56',
-            'turquoise'
-          ],
+          data: [500, 1000, 230000000, 435000000],
+          backgroundColor: ['#FF6384', 'cyan', '#FFCE56', 'turquoise'],
           label: 'Entwicklungskosten'
-        }],
-        labels: [
-          '"Pong" 1972',
-          '"Pac-Man" 1980',
-          '"GTA 5" 2013',
-          '"Destiny" 2014'
-        ]
+        }]
       },
       options: {
         responsive: true,
-        maintainAspectRatio: false
+        maintainAspectRatio: false,
+        multiTooltipTemplate: string,
+        scales: {
+          xAxes: [{
+            position: 'bottom'
+          }],
+          yAxes: [{
+            position: 'left',
+            scaleLabel: function (valuePayload) {
+              return Number.parseInt(valuePayload)
+            },
+            type: 'logarithmic',
+            ticks: {
+              min: 1,
+              max: 450000000
+            }
+          }]
+        }
       }
     }
   },

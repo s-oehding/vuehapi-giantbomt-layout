@@ -23,9 +23,7 @@ export default {
 </script>
 
 <style lang="sass">
-$brand-primary: turquoise;
-$gray-medium: #d2d2d2;
-$gray-dark: #292b2c;
+@import "../assets/scss/variables";
 
 $sidebarWidth: 15%;
 $header-height: 55px;
@@ -54,10 +52,10 @@ $footer-height: 45px;
   font-size: 10px;
   position: relative;
   text-indent: -9999em;
-  border-top: 1.1em solid rgba(255, 255, 255, 0.2);
-  border-right: 1.1em solid rgba(255, 255, 255, 0.2);
-  border-bottom: 1.1em solid rgba(255, 255, 255, 0.2);
-  border-left: 1.1em solid #ffffff;
+  border-top: 1.1em solid rgba(0, 229, 238, 0.2);
+  border-right: 1.1em solid rgba(0, 229, 238, 0.2);
+  border-bottom: 1.1em solid rgba(0, 229, 238, 0.2);
+  border-left: 1.1em solid $brand-primary;
   -webkit-transform: translateZ(0);
   -ms-transform: translateZ(0);
   transform: translateZ(0);
