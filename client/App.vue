@@ -95,7 +95,6 @@ h1, h2, h3, h4, h5, h6 {
   .nav {
     background-color: $gray-dark;
     border-radius: 0px;
-    height: $header-height;
 
     .nav-item {
       transition: all 0.25s ease-in-out;
@@ -105,7 +104,6 @@ h1, h2, h3, h4, h5, h6 {
       }
     }
   }
-  // background: $gray-medium;
 
   #content {
     display: block;

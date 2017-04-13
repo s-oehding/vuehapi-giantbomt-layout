@@ -1,14 +1,22 @@
-const giantbomb = require('giantbomb');
-const gb = giantbomb('e4e37a13e893b3617854a9d13a246ec90ba07bdb');
 
-const getData = function(request, next) {
-  gb.games.list(request, (err, res, json) => {
-    console.log(request)
-    if (err) {
-      next(err);
-    } else {
-      next(null, json);
-    }
+const gbKey = 'e4e37a13e893b3617854a9d13a246ec90ba07bdb';
+const axios = require('axios');
+var instance = axios.create({
+  baseURL: 'https://www.giantbomb.com/api/'
+});
+
+const getData = function(endpoint, request, next) {
+
+  axios.get(endpoint, {
+    params: request.params
+  })
+  .then(function (response) {
+    console.log(response);
+    next(null, response);
+  })
+  .catch(function (error) {
+    console.log(error);
+    next(err);
   });
 };
 
@@ -24,8 +32,11 @@ module.exports = [
     options: {
       cache: {
         cache: 'redisCache',
-        expiresIn: 60 * second,
-        generateTimeout: 1000
+        expiresIn: 10 * minute,
+        generateTimeout: 10 * second
+      },
+      generateKey: function (request) {
+        return request;
       }
     }
   }

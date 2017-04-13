@@ -13,7 +13,7 @@ Vue.use(VueLazyload)
 Vue.use(VueLazyload, {
   preLoad: 1.3,
   error: '../static/error.png',
-  loading: '../static/loader.svg',
+  loading: '../static/spinner.svg',
   attempt: 3
 })
 
@@ -50,7 +50,7 @@ import store from './store/store'
 
 const router = new VueRouter({
   mode: 'history',
-  routes // short for routes: routes
+  routes: routes // short for routes: routes
 })
 
 /* eslint-disable no-new */

@@ -2,6 +2,7 @@
 
 const Hapi = require('hapi');
 const Inert = require('inert');
+// const h2o2 = require('h2o2');
 const methods = require('./server/methods');
 
 const server = new Hapi.Server({
@@ -46,13 +47,14 @@ if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test') {
       throw err;
     }
   });
-
 }
 
 server.register([
   Inert,
   require('hapi-qs'),
-  require('./server/routes/test-routes.js'),
+  require('h2o2'),
+  require('./server/routes/testRoutes.js'),
+  require('./server/routes/defaultRoutes.js'),
   require('./server/routes/gameRoutes.js'),
   require('./server/routes/genreRoutes.js'),
   require('./server/routes/platformRoutes.js'),
@@ -65,8 +67,27 @@ server.register([
   for (var method in methods) {
     server.method(methods[method]);
   }
-  // server.route(routes);
 });
+
+if (process.env.NODE_ENV !== 'production') {
+  server.route({
+    method: 'GET',
+    path: '/{path*}',
+    handler: {
+      proxy: {
+        uri: 'http://localhost:3000/'
+      }
+    }
+  });
+} else {
+  server.route({
+    method: 'GET',
+    path: '/{path*}',
+    handler: function (request, reply) {
+      reply.file('./public/index.html');
+    }
+  });
+}
 
 server.start((err) => {
 

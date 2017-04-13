@@ -40,7 +40,6 @@ const mutations = {
 
 const actions = {
   getGames: ({commit}, config) => {
-    console.log('Games Config: ', {params: config})
     axios.get('/api/games', {
       params: {
         page: 1,
@@ -52,11 +51,10 @@ const actions = {
       }
     }).then(
       response => {
-        console.log(response)
         commit('SET_GAMES', response)
       },
       error => {
-        console.log(error)
+        console.err(error)
         this.error = error
       })
   },
@@ -67,7 +65,7 @@ const actions = {
         commit('SET_GAME', response)
       },
       error => {
-        console.log(error)
+        console.err(error)
         this.error = error
       })
   }
