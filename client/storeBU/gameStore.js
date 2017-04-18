@@ -20,8 +20,8 @@ const getters = {
 
 const mutations = {
   SET_GAMES (state, response) {
-    state.games = response.data
-    if (state.games.length === response.data.length) {
+    state.games = state.games.concat(response.data.results)
+    if (state.games.length === 100) {
       state.loading = false
       state.ready = true
     }
@@ -39,13 +39,22 @@ const mutations = {
 }
 
 const actions = {
-  getGames: ({commit}) => {
-    axios.get('/api/games').then(
+  getGames: ({commit}, config) => {
+    axios.get('/api/games', {
+      params: {
+        page: 1,
+        perPage: config.perPage,
+        fields: config.fields,
+        filters: config.filters,
+        sortBy: config.sortBy,
+        sortDir: config.sortDir
+      }
+    }).then(
       response => {
         commit('SET_GAMES', response)
       },
       error => {
-        console.log(error)
+        console.err(error)
         this.error = error
       })
   },
@@ -56,7 +65,7 @@ const actions = {
         commit('SET_GAME', response)
       },
       error => {
-        console.log(error)
+        console.err(error)
         this.error = error
       })
   }

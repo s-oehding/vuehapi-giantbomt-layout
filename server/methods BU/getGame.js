@@ -1,14 +1,14 @@
 const giantbomb = require('giantbomb');
 const gb = giantbomb('e4e37a13e893b3617854a9d13a246ec90ba07bdb');
 
-const getPlatform = function(id, next) {
-  const db = request.mongo.db;
-
-  db.collection('platforms').find(function (err, result) {
-      if (err) {
-        return reply(Boom.internal('Internal MongoDB error', err));
-      }
-      next(result);
+const getGame = function(id, next) {
+  gb.games.get(id, (err, res, json) => {
+    console.log('GET Game id: ', id)
+    if (err) {
+      next(err);
+    } else {
+      next(null, json);
+    }
   });
 };
 
@@ -19,8 +19,8 @@ var day = 24 * hour
 
 module.exports = [
   {
-    name: 'getPlatform',
-    method: getPlatform,
+    name: 'getGame',
+    method: getGame,
     options: {
       cache: {
         cache: 'redisCache',

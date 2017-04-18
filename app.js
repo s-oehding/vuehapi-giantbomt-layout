@@ -1,9 +1,14 @@
 'use strict';
 
 const Hapi = require('hapi');
-const Inert = require('inert');
-// const h2o2 = require('h2o2');
+const Boom = require('boom');
 const methods = require('./server/methods');
+
+// MogoDB Connection
+const dbOpts = {
+    url: 'mongodb://monokultur:passwortS#R3N@ds161890.mlab.com:61890/game-lounge',
+    decorate: true
+};
 
 const server = new Hapi.Server({
   cache: [
@@ -42,7 +47,9 @@ if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test') {
     }
   }, {
     register: HapiWebpackHotMiddleware
-  }], function (err) {
+  }, {
+    register: require('h2o2')
+  },], function (err) {
     if (err) {
       throw err;
     }
@@ -50,15 +57,15 @@ if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test') {
 }
 
 server.register([
-  Inert,
-  require('hapi-qs'),
-  require('h2o2'),
-  require('./server/routes/testRoutes.js'),
-  require('./server/routes/defaultRoutes.js'),
-  require('./server/routes/gameRoutes.js'),
-  require('./server/routes/genreRoutes.js'),
-  require('./server/routes/platformRoutes.js'),
-  require('./server/routes/searchRoutes.js')
+  {register: require('hapi-mongodb'), options: dbOpts},
+  {register: require('inert')},
+  {register: require('hapi-qs')},
+  {register: require('./server/routes/companiesRoutes.js')},
+  {register: require('./server/routes/defaultRoutes.js')},
+  {register: require('./server/routes/gameRoutes.js')},
+  {register: require('./server/routes/genreRoutes.js')},
+  {register: require('./server/routes/platformRoutes.js')},
+  {register: require('./server/routes/searchRoutes.js')}
   ], function (err) {
 
   if (err) {
@@ -67,6 +74,14 @@ server.register([
   for (var method in methods) {
     server.method(methods[method]);
   }
+
+  server.start((err) => {
+    if (err) {
+      throw err;
+    }
+    console.log('Server running at:', server.info.uri);
+    console.log('Loaded Servermethods:\n', server.methods);
+  });
 });
 
 if (process.env.NODE_ENV !== 'production') {
@@ -88,14 +103,5 @@ if (process.env.NODE_ENV !== 'production') {
     }
   });
 }
-
-server.start((err) => {
-
-  if (err) {
-    throw err;
-  }
-  console.log('Server running at:', server.info.uri);
-  console.log('Loaded Servermethods:\n', server.methods);
-});
 
 module.exports = server;

@@ -4,9 +4,13 @@ var platformRoutes = {
       method: 'GET',
       path: '/api/platforms',
       handler: function (request, reply) {
-        server.methods.getPlatforms(request.query, function(error, result) {
-          console.log('In Route query:', request.query)
-          reply(error || result);
+        const db = request.mongo.db;
+
+        db.collection('platforms').find().toArray(function (err, result) {
+            if (err) {
+              return reply(Boom.internal('Internal MongoDB error', err));
+            }
+            reply(result);
         });
       }
     }),

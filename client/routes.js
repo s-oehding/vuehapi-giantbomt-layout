@@ -11,6 +11,8 @@ import PlatformDetail from './pages/PlatformDetail'
 import SearchPage from './pages/SearchPage'
 import Error404 from './pages/Error'
 
+import TestPage from './pages/TestPage'
+
 const routes = [
   {
     path: '/',
@@ -51,6 +53,11 @@ const routes = [
     name: 'game',
     path: '/game/:id',
     component: GameDetail
+  },
+  {
+    path: '/test',
+    name: 'test',
+    component: TestPage
   }
 ]
 

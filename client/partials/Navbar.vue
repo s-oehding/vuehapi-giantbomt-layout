@@ -14,6 +14,7 @@
       <b-nav-item to="/map" class="nav-link" linkActiveClass="active" exact>Map</b-nav-item>
       <b-nav-item to="/search" class="nav-link" linkActiveClass="active" exact>Search</b-nav-item>
       <b-nav-item to="/platforms" class="nav-link" linkActiveClass="active" exact>Platforms</b-nav-item>
+      <b-nav-item to="/test" class="nav-link" linkActiveClass="active" exact>API Test</b-nav-item>
       <!-- <b-nav-item to="/timeline" class="nav-link" linkActiveClass="active" exact>Timeline</b-nav-item> -->
     </b-nav>
   </b-collapse>

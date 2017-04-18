@@ -1,30 +1,28 @@
 import axios from 'axios'
-
 const state = {
-  genres: [],
+  loading: true,
   ready: false,
-  loading: true
+  error: {},
+  data: []
 }
 
 const getters = {
-  genres: state => {
+  data: state => {
     return state
   }
 }
 
 const mutations = {
-  SET_GENRES (state, response) {
-    state.genres = response.data.results
-    state.loading = false
-    state.ready = true
+  SET_DATA (state, response) {
+    state.data = response.data
   }
 }
 
 const actions = {
-  getGenres: ({commit}) => {
-    axios.get('/api/genres').then(
+  getData: ({commit}, config) => {
+    axios.get('/api/test').then(
       response => {
-        commit('SET_GENRES', response)
+        commit('SET_DATA', response)
       },
       error => {
         console.log(error)

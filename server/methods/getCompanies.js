@@ -1,10 +1,11 @@
 const giantbomb = require('giantbomb');
 const gb = giantbomb('e4e37a13e893b3617854a9d13a246ec90ba07bdb');
 
-const getGames = function(request, next) {
+const getCompanies = function(request, next) {
   const db = request.mongo.db;
+  const ObjectID = request.mongo.ObjectID;
 
-  db.collection('games').find(function (err, result) {
+  db.collection('companies').find(function (err, result) {
       if (err) {
         return reply(Boom.internal('Internal MongoDB error', err));
       }
@@ -19,7 +20,7 @@ var day = 24 * hour
 
 module.exports = [
   {
-    name: 'getGames',
-    method: getGames
+    name: 'getCompanies',
+    method: getCompanies
   }
 ]

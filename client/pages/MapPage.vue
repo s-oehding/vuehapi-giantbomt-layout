@@ -1,145 +1,469 @@
 <template>
-  <div id="map">
-    <img id="projection" src="../assets/equirectangle_projection.png">
+  <div class="map-wrapper">
+    <preloader v-if="this.status === 'loading'"><p class="await">Loading...</p></preloader>
+    <div v-else-if="this.status === 'ready'" id="map">
+      <gmap-map
+        :center='center'
+        :zoom='3'
+        :options="{styles: mapStyles}"
+        style='width: 100%; height: 100%'
+      >
+      <gmap-cluster :grid-size="gridSize">
+          <gmap-marker
+            v-for="(company, id) in geoCoded"
+            :position="company.position"
+            :clickable="true"
+            :draggable="false"
+            :key="id"
+            @click="toggleInfoWindow(company, id)"
+          >
+          </gmap-marker>
+        </gmap-cluster>
+        <gmap-info-window :options="infoOptions" :position="infoWindowPos" :opened="infoWinOpen" :content="infoContent" @closeclick="infoWinOpen=false"></gmap-info-window>
+      </gmap-map>
+    </div>
   </div>
 </template>
 
 <script>
-import _ from 'lodash'
-import $ from 'jquery'
-import * as THREE from 'three/build/three.js'
-import TrackballControls from 'three-trackballcontrols'
-import Hexasphere from 'hexasphere.js'
+import { mapActions } from 'vuex'
 
 export default {
-  name: 'map',
-  props: [],
   data () {
     return {
-      map: {},
-      ready: false
+      center: {lat: 10.0, lng: 10.0},
+      infoContent: '',
+      infoWindowPos: {
+        lat: 0,
+        lng: 0
+      },
+      infoWinOpen: false,
+      currentMidx: null,
+      // optional: offset infowindow so it visually sits nicely on top of our marker
+      infoOptions: {
+        pixelOffset: {
+          width: 0,
+          height: -35
+        }
+      },
+      gridSize: 50,
+      mapStyles: [
+        {
+          'featureType': 'all',
+          'elementType': 'labels',
+          'stylers': [
+            {
+              'visibility': 'on'
+            }
+          ]
+        },
+        {
+          'featureType': 'all',
+          'elementType': 'labels.text.fill',
+          'stylers': [
+            {
+              'saturation': 36
+            },
+            {
+              'color': '#000000'
+            },
+            {
+              'lightness': 40
+            }
+          ]
+        },
+        {
+          'featureType': 'all',
+          'elementType': 'labels.text.stroke',
+          'stylers': [
+            {
+              'visibility': 'on'
+            },
+            {
+              'color': '#000000'
+            },
+            {
+              'lightness': 16
+            }
+          ]
+        },
+        {
+          'featureType': 'all',
+          'elementType': 'labels.icon',
+          'stylers': [
+            {
+              'visibility': 'off'
+            }
+          ]
+        },
+        {
+          'featureType': 'administrative',
+          'elementType': 'geometry.fill',
+          'stylers': [
+            {
+              'color': '#000000'
+            },
+            {
+              'lightness': 20
+            }
+          ]
+        },
+        {
+          'featureType': 'administrative',
+          'elementType': 'geometry.stroke',
+          'stylers': [
+            {
+              'color': '#000000'
+            },
+            {
+              'lightness': 17
+            },
+            {
+              'weight': 1.2
+            }
+          ]
+        },
+        {
+          'featureType': 'administrative',
+          'elementType': 'labels',
+          'stylers': [
+            {
+              'visibility': 'off'
+            }
+          ]
+        },
+        {
+          'featureType': 'landscape',
+          'elementType': 'geometry',
+          'stylers': [
+            {
+              'color': '#000000'
+            },
+            {
+              'lightness': 20
+            }
+          ]
+        },
+        {
+          'featureType': 'landscape',
+          'elementType': 'labels',
+          'stylers': [
+            {
+              'visibility': 'off'
+            }
+          ]
+        },
+        {
+          'featureType': 'landscape.man_made',
+          'elementType': 'labels',
+          'stylers': [
+            {
+              'visibility': 'off'
+            }
+          ]
+        },
+        {
+          'featureType': 'landscape.natural',
+          'elementType': 'labels',
+          'stylers': [
+            {
+              'visibility': 'off'
+            }
+          ]
+        },
+        {
+          'featureType': 'landscape.natural.landcover',
+          'elementType': 'labels',
+          'stylers': [
+            {
+              'visibility': 'off'
+            }
+          ]
+        },
+        {
+          'featureType': 'landscape.natural.terrain',
+          'elementType': 'labels',
+          'stylers': [
+            {
+              'visibility': 'off'
+            }
+          ]
+        },
+        {
+          'featureType': 'poi',
+          'elementType': 'geometry',
+          'stylers': [
+            {
+              'color': '#000000'
+            },
+            {
+              'lightness': 21
+            }
+          ]
+        },
+        {
+          'featureType': 'poi',
+          'elementType': 'labels',
+          'stylers': [
+            {
+              'visibility': 'on'
+            }
+          ]
+        },
+        {
+          'featureType': 'road',
+          'elementType': 'geometry',
+          'stylers': [
+            {
+              'color': '#00ffff'
+            }
+          ]
+        },
+        {
+          'featureType': 'road',
+          'elementType': 'labels',
+          'stylers': [
+            {
+              'visibility': 'off'
+            }
+          ]
+        },
+        {
+          'featureType': 'road.highway',
+          'elementType': 'geometry',
+          'stylers': [
+            {
+              'color': '#00fbff'
+            }
+          ]
+        },
+        {
+          'featureType': 'road.highway',
+          'elementType': 'geometry.fill',
+          'stylers': [
+            {
+              'color': '#000000'
+            },
+            {
+              'lightness': 17
+            }
+          ]
+        },
+        {
+          'featureType': 'road.highway',
+          'elementType': 'geometry.stroke',
+          'stylers': [
+            {
+              'color': '#000000'
+            },
+            {
+              'lightness': 29
+            },
+            {
+              'weight': 0.2
+            }
+          ]
+        },
+        {
+          'featureType': 'road.highway',
+          'elementType': 'labels',
+          'stylers': [
+            {
+              'visibility': 'off'
+            }
+          ]
+        },
+        {
+          'featureType': 'road.highway.controlled_access',
+          'elementType': 'labels',
+          'stylers': [
+            {
+              'visibility': 'off'
+            }
+          ]
+        },
+        {
+          'featureType': 'road.arterial',
+          'elementType': 'geometry',
+          'stylers': [
+            {
+              'color': '#00fffb'
+            },
+            {
+              'lightness': 18
+            }
+          ]
+        },
+        {
+          'featureType': 'road.arterial',
+          'elementType': 'labels',
+          'stylers': [
+            {
+              'visibility': 'off'
+            }
+          ]
+        },
+        {
+          'featureType': 'road.local',
+          'elementType': 'geometry',
+          'stylers': [
+            {
+              'color': '#00ffff'
+            },
+            {
+              'lightness': 16
+            }
+          ]
+        },
+        {
+          'featureType': 'road.local',
+          'elementType': 'labels',
+          'stylers': [
+            {
+              'visibility': 'off'
+            }
+          ]
+        },
+        {
+          'featureType': 'transit',
+          'elementType': 'geometry',
+          'stylers': [
+            {
+              'color': '#000000'
+            },
+            {
+              'lightness': 19
+            },
+            {
+              'visibility': 'off'
+            }
+          ]
+        },
+        {
+          'featureType': 'transit',
+          'elementType': 'labels',
+          'stylers': [
+            {
+              'visibility': 'off'
+            }
+          ]
+        },
+        {
+          'featureType': 'transit.line',
+          'elementType': 'geometry',
+          'stylers': [
+            {
+              'visibility': 'off'
+            }
+          ]
+        },
+        {
+          'featureType': 'transit.line',
+          'elementType': 'labels',
+          'stylers': [
+            {
+              'visibility': 'off'
+            }
+          ]
+        },
+        {
+          'featureType': 'transit.station',
+          'elementType': 'labels',
+          'stylers': [
+            {
+              'visibility': 'off'
+            }
+          ]
+        },
+        {
+          'featureType': 'water',
+          'elementType': 'geometry',
+          'stylers': [
+            {
+              'color': '#000303'
+            },
+            {
+              'lightness': 17
+            }
+          ]
+        },
+        {
+          'featureType': 'water',
+          'elementType': 'labels',
+          'stylers': [
+            {
+              'visibility': 'off'
+            }
+          ]
+        }
+      ]
     }
   },
   mounted () {
-    this.renderMap()
+    if (this.companies.companies.length === 0) {
+      this.getCompanies()
+    }
+    if (this.companies.ready) {
+      this.$nextTick(function() {
+        console.log('Map ready')
+      })
+    }
   },
   methods: {
-    renderMap () {
-      _.delay(function () {
-        var hexasphere = new Hexasphere(30, 25, 0.95)
-        var container = document.getElementById('map')
-        var width = parseInt(window.getComputedStyle(container).width)
-        var height = parseInt(window.getComputedStyle(container).height)
-        let renderer = new THREE.WebGLRenderer({ antialias: true })
+    toggleInfoWindow: function(marker, idx) {
+      var imgUrl, description, url
+      if (marker.image) {
+        imgUrl = marker.image.medium_url
+      } else {
+        imgUrl = 'https://placehold.it/250x125/292b2c?text=No+Image'
+      }
 
-        renderer.setSize(width, height)
-        var cameraDistance = 65
-        var camera = new THREE.PerspectiveCamera(cameraDistance, width / height, 1, 200)
-        camera.position.z = -cameraDistance
+      if (marker.description) {
+        description = marker.description
+      } else {
+        description = 'No Description'
+      }
 
-        var scene = new THREE.Scene()
-        scene.fog = new THREE.Fog(0x000000, cameraDistance * 0.4, cameraDistance * 1.2)
+      if (marker.url) {
+        url = marker.url
+      } else {
+        url = 'No URl'
+      }
 
-        var img = document.getElementById('projection')
-        var projectionCanvas = document.createElement('canvas')
-        var projectionContext = projectionCanvas.getContext('2d')
-        projectionCanvas.width = img.width
-        projectionCanvas.height = img.height
-        projectionContext.drawImage(img, 0, 0, img.width, img.height)
-        var pixelData = null
-
-        let isLand = function (lat, lon) {
-          var x = parseInt(img.width * (lon + 180) / 360)
-          var y = parseInt(img.height * (lat + 90) / 180)
-          if (pixelData == null) {
-            pixelData = projectionContext.getImageData(0, 0, img.width, img.height)
-          }
-          // console.log(pixelData.data)
-          return pixelData.data[(y * pixelData.width + x) * 4] === 0
-        }
-
-        var meshMaterials = []
-        meshMaterials.push(new THREE.MeshBasicMaterial({ side: THREE.DoubleSide, color: 0x40e0d0 }))
-        meshMaterials.push(new THREE.MeshBasicMaterial({ side: THREE.DoubleSide, color: 0x36bfb2 }))
-        meshMaterials.push(new THREE.MeshBasicMaterial({ side: THREE.DoubleSide, color: 0x39fbe7 }))
-        meshMaterials.push(new THREE.MeshBasicMaterial({ side: THREE.DoubleSide, color: 0x4df5e4 }))
-        meshMaterials.push(new THREE.MeshBasicMaterial({ side: THREE.DoubleSide, color: 0x42c1b5 }))
-
-        var lineMaterial = new THREE.LineBasicMaterial({ color: 0x292b2c, opacity: 0.1, linewidth: 1, transparent: true })
-
-        for (var i = 0; i < hexasphere.tiles.length; i++) {
-          var t = hexasphere.tiles[i]
-          var latLon = t.getLatLon(hexasphere.radius)
-
-          var geometry = new THREE.Geometry()
-
-          for (var j = 0; j < t.boundary.length; j++) {
-            var bp = t.boundary[j]
-            geometry.vertices.push(new THREE.Vector3(bp.x, bp.y, bp.z))
-          }
-          geometry.vertices.push(new THREE.Vector3(t.boundary[0].x, t.boundary[0].y, t.boundary[0].z))
-
-          if (isLand(latLon.lat, latLon.lon)) {
-            geometry.faces.push(new THREE.Face3(0, 1, 2))
-            geometry.faces.push(new THREE.Face3(0, 2, 3))
-            geometry.faces.push(new THREE.Face3(0, 3, 4))
-            geometry.faces.push(new THREE.Face3(0, 4, 5))
-
-            var mesh = new THREE.Mesh(geometry, meshMaterials[Math.floor(Math.random() * meshMaterials.length)])
-            mesh.doubleSided = true
-            scene.add(mesh)
-          } else {
-            scene.add(new THREE.Line(geometry, lineMaterial))
-          }
-        }
-        var controls
-        controls = new TrackballControls(camera, renderer.domElement)
-        renderer.render(scene, camera)
-        controls.update()
-        var lastTime = Date.now()
-        var cameraAngle = 90
-
-        var tick = function () {
-          var dt = Date.now() - lastTime
-
-          var rotateCameraBy = (2 * Math.PI) / (200000 / dt)
-          cameraAngle += rotateCameraBy
-
-          lastTime = Date.now()
-
-          camera.position.x = cameraDistance * Math.cos(cameraAngle)
-          camera.position.y = Math.sin(cameraAngle) * 10
-          camera.position.z = cameraDistance * Math.sin(cameraAngle)
-          camera.lookAt(scene.position)
-
-          renderer.render(scene, camera)
-
-          window.requestAnimationFrame(tick)
-          controls.update()
-        }
-
-        function onWindowResize () {
-          camera.aspect = window.innerWidth / window.innerHeight
-          camera.updateProjectionMatrix()
-          renderer.setSize(window.innerWidth, window.innerHeight)
-        }
-        window.addEventListener('resize', onWindowResize, false)
-        $('#map').append(renderer.domElement)
-        window.requestAnimationFrame(tick)
-        window.hexasphere = hexasphere
-      }, 1000)
+      this.infoWindowPos = marker.position
+      this.infoContent = `<div class='wrapper'><img src='${imgUrl}'><br><hr><br><h4>${marker.name}</h4><br><p>${description}</p><p><a href='${url}'>${url}</a></p></div>`
+      // check if its the same marker that was selected if yes toggle
+      if (this.currentMidx === idx) {
+        this.infoWinOpen = !this.infoWinOpen
+      } else {
+        this.infoWinOpen = true
+        this.currentMidx = idx
+      }
+    },
+    ...mapActions([
+      'getCompanies'
+    ])
+  },
+  computed: {
+    companies () {
+      return this.$store.getters.companies
+    },
+    geoCoded () {
+      let companies = []
+      for (var company of this.companies.companies) {
+        let position = { lat: parseFloat(company.location.latt), lng: parseFloat(company.location.longt) }
+        company.position = position
+        companies.push(company)
+      }
+      return companies
+    },
+    status () {
+      if (this.companies.ready && !this.companies.loading) {
+        return 'ready'
+      } else if (!this.companies.ready && this.companies.loading) {
+        return 'loading'
+      }
     }
   }
 }
-
 </script>
-
-<style lang="sass" scoped>
-  #map {
-    width: 100%;
-    height: 100%;
-    #projection {
-      display: none;
-    }
-  }
-</style>

@@ -4,8 +4,13 @@ var genreRoutes = {
       method: 'GET',
       path: '/api/genres',
       handler: function (request, reply) {
-        server.methods.getGenres(request.query, function(error, result) {
-          reply(error || result);
+        const db = request.mongo.db;
+
+        db.collection('genres').find().toArray(function (err, result) {
+            if (err) {
+              return reply(Boom.internal('Internal MongoDB error', err));
+            }
+            reply(result);
         });
       }
     }),

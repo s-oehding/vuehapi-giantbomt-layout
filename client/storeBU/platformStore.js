@@ -18,8 +18,8 @@ const getters = {
 
 const mutations = {
   SET_PLATFORMS (state, response) {
-    state.platforms = response.data
-    if (state.platforms.length === response.data.length) {
+    state.platforms = state.platforms.concat(response.data.results)
+    if (state.platforms.length === response.data.number_of_total_results) {
       state.loading = false
       state.ready = true
     }
@@ -37,10 +37,31 @@ const mutations = {
 }
 
 const actions = {
-  getPlatforms: ({commit}) => {
-    axios.get('/api/platforms').then(
+  getPlatforms: ({commit}, config) => {
+    axios.get('/api/platforms', {params: config}).then(
       response => {
+        // console.log('Meta response: ', response)
+        // console.log('TotalPages: ', response.data.number_of_total_pages)
         commit('SET_PLATFORMS', response)
+        for (var i = config.page + 1; i <= response.data.number_of_total_pages; i++) {
+          axios.get('/api/platforms', {
+            params: {
+              page: i,
+              perPage: config.perPage,
+              fields: config.fields,
+              filters: config.filters,
+              sortBy: config.sortBy,
+              sortDir: config.sortDir
+            }
+          }).then(
+            response => {
+              console.log('Platforms page: ' + response.config.params.page, response)
+              commit('SET_PLATFORMS', response)
+            },
+            error => {
+              console.log('ERROR', error)
+            })
+        }
       },
       error => {
         console.log('ERROR', error)

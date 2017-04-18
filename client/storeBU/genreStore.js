@@ -21,9 +21,10 @@ const mutations = {
 }
 
 const actions = {
-  getGenres: ({commit}) => {
-    axios.get('/api/genres').then(
+  getGenres: ({commit}, config) => {
+    axios.get('/api/genres', {params: {perPage: config.perPage}}).then(
       response => {
+        console.log('Genres response: ', response)
         commit('SET_GENRES', response)
       },
       error => {

@@ -12,9 +12,17 @@ import VueLazyload from 'vue-lazyload'
 Vue.use(VueLazyload)
 Vue.use(VueLazyload, {
   preLoad: 1.3,
-  error: '../static/error.png',
-  loading: '../static/spinner.svg',
+  error: 'static/error.png',
+  loading: 'static/spinner.svg',
   attempt: 3
+})
+
+import * as VueGoogleMaps from 'vue2-google-maps'
+Vue.use(VueGoogleMaps, {
+  load: {
+    key: 'AIzaSyBOHnGDS3uExnx00p7VAMGby6KRlZYLarQ',
+    libraries: 'places' // If you need to use place input
+  }
 })
 
 // ES build is more efficient by reducing unneeded components with tree-shaking.

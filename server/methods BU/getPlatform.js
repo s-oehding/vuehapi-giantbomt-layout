@@ -2,13 +2,13 @@ const giantbomb = require('giantbomb');
 const gb = giantbomb('e4e37a13e893b3617854a9d13a246ec90ba07bdb');
 
 const getPlatform = function(id, next) {
-  const db = request.mongo.db;
-
-  db.collection('platforms').find(function (err, result) {
-      if (err) {
-        return reply(Boom.internal('Internal MongoDB error', err));
-      }
-      next(result);
+  gb.platforms.get(id, (err, res, json) => {
+    console.log('GET Platform id: ', id)
+    if (err) {
+      next(err);
+    } else {
+      next(null, json);
+    }
   });
 };
 

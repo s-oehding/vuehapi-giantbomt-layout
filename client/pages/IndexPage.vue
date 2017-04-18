@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="index-wrapper">
     <preloader v-if="this.status === 'loading'"><p class="await">Loading...</p></preloader>
     <ul v-else-if="this.status === 'ready'" id="hexGrid">
       <li v-for="game in this.games.games"  class="hex">
@@ -20,15 +20,11 @@ import { mapActions } from 'vuex'
 export default {
   data () {
     return {
-      config: {
-        perPage: 100,
-        fields: ['id', 'name', 'image']
-      }
     }
   },
   mounted () {
     if (this.games.games.length === 0) {
-      this.getGames(this.config)
+      this.getGames()
     }
     if (this.games.ready) {
       this.$nextTick(function() {
@@ -63,6 +59,13 @@ export default {
 <style lang="sass" scoped>
 @import "../assets/scss/variables";
 @import "~bootstrap/scss/mixins/breakpoints";
+
+.index-wrapper {
+  margin-left: -5%;
+  margin-right: -5%;
+  margin-top: -2.5%;
+  margin-bottom: -2.5%;
+}
 
 #hexGrid {
   display: flex;

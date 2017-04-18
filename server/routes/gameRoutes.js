@@ -4,8 +4,12 @@ var gameRoutes = {
       method: 'GET',
       path: '/api/games',
       handler: function (request, reply) {
-        server.methods.getGames(request.query, function(error, result) {
-          reply(error || result);
+        const db = request.mongo.db;
+        db.collection('games').find().limit(150).toArray(function (err, result) {
+            if (err) {
+              return reply(Boom.internal('Internal MongoDB error', err));
+            }
+            reply(result);
         });
       }
     }),

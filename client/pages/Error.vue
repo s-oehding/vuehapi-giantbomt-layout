@@ -1,14 +1,18 @@
 <template>
-  <page-content page-title="Error" v-md-theme="red">
-    <div class="main-content">
-      <section>
-        <h2 class="md-headline">Hmmm. Too bad</h2>
+  <div class="container">
+    <div class="row align-items-center">
+      <b-alert variant="danger" class="col-sm-12" show>
+        That`s a 404
+      </b-alert>
+      <section class="col-sm-12">
+        <h2 class="md-headline">Hmmm. Too bad 404 XD</h2>
         <p>Are you searching for a new component? Or maybe you have an question? Get in touch!</p>
-        <md-button class="md-primary md-raised" href="mailto:marcosvmmoura@gmail.com?Subject=Vue%20Material%20-%20Question" target="_blank" rel="noopener">E-mail</md-button>
-        <md-button class="md-primary md-raised" href="https://github.com/marcosmoura/vue-material/issues/new" target="_blank" rel="noopener">New Issue</md-button>
+        <b-button variant="outline-primary" href="/">
+          BACK
+        </b-button>
       </section>
     </div>
-  </page-content>
+  </div>
 </template>
 
 <style lang="sass" scoped>

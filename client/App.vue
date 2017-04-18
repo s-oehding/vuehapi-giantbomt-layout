@@ -15,19 +15,15 @@ export default {
   data () {
     return {
       loading: true,
-      ready: false,
-      config: {
-        page: 1,
-        perPage: 100
-      }
+      ready: false
     }
   },
   mounted () {
     if (this.genres.genres.length === 0) {
-      this.getGenres(this.config)
+      this.getGenres()
     }
     if (this.platforms.platforms.length === 0) {
-      this.getPlatforms(this.config)
+      this.getPlatforms()
     }
     if (this.platforms.ready === true && this.genres.ready === true) {
       this.loading = false
@@ -109,7 +105,7 @@ h1, h2, h3, h4, h5, h6 {
     display: block;
     margin-top: 71px;
     margin-bottom: 50px;
-    min-height: calc(100vh - 96px);
+    min-height: calc(100vh - 126px);
   }
 
   .footer {
